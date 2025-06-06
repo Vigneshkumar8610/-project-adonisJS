@@ -1,6 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Movie from '#models/movie'
-import cache from '#services/cache_service'
 
 export default class MoviesController {
   async index({ view }: HttpContext) {
