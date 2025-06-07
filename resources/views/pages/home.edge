@@ -1,19 +1,17 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>
-      AdonisJS - A fully featured web framework for Node.js
-    </title>
- @vite(['resources/js/app.js'])
-  </head>
-    <body>
 
-<div class="max-w-3xl mx-auto mt-6">
 
-      @include('partials/nav')
+
+@layout()
+
+@slot('meta')
+<meta name="description" content="Our awesome movie list"/>
+@endslot
+
+
       <h1>Its Works</h1>
+      
+
+
 
      <div class="flex flex-wrap -mx-6">
       @each ((movie) in movies)
@@ -27,21 +25,8 @@
       @end
      </div>
 
-    <ul class="flex flex-col gap-4"> 
-         @each ((movie, index) in movies)
-          <li>
-            <a href="{{ route('movies.show', { slug: movie.slug}) }}" class="font-bold">
-              {{ movie.title }}
-            </a>
-             <p class="text-slate-600">
-              {{ truncate(movie.summary, 25, { completeWords: true })}}
-             </p>
-
-          </li>
-        @endeach
-    </ul>
-
+  
     </div>
    
-  </body>
-</html>
+    @end
+ 
