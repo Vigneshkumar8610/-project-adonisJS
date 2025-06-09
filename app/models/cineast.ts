@@ -19,4 +19,8 @@ export default class Cineast extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  get fullName() {
+    return `${this.firstName} ${this.lastName}`
+  }
 }

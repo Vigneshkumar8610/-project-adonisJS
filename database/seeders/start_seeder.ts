@@ -7,7 +7,7 @@ import MovieStatuses from '#enums/movie_statuses'
 export default class extends BaseSeeder {
   async run() {
     // Write your database queries inside the run method
-    await Role.createMany([
+    await Role.updateOrCreateMany('id', [
       {
         id: Roles.USER,
         name: 'User',
@@ -18,9 +18,9 @@ export default class extends BaseSeeder {
       },
     ])
 
-    await MovieStatus.createMany([
+    await MovieStatus.updateOrCreateMany('id', [
       {
-        id: MovieStatuses.WRITTING,
+        id: MovieStatuses.WRITING,
         name: 'Writing',
       },
       {
@@ -34,7 +34,7 @@ export default class extends BaseSeeder {
       },
 
       {
-        id: MovieStatuses.P0ST_PRODUCTION,
+        id: MovieStatuses.POST_PRODUCTION,
         name: 'Post Production',
       },
 
@@ -42,12 +42,6 @@ export default class extends BaseSeeder {
         id: MovieStatuses.RELEASED,
         name: 'Released',
       },
-
-
-
-
-
-
     ])
   }
 }
