@@ -1,11 +1,22 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Movie from '#models/movie'
+import { scope } from '@adonisjs/lucid/orm'
 
 export default class MoviesController {
   async index({ view }: HttpContext) {
-    const movies = await Movie.all()
+    const comingSoon = await Movie.query()
+      .apply((scope) => scope.notReleased())
+      .whereNotNull('releasedAt')
+      .orderBy('releasedAt')
+      .limit(3)
 
-    return view.render('pages/home', { movies })
+    const movies = await Movie.all()
+    const recentlyReleased = await Movie.query()
+      .apply((scope) => scope.released())
+      .orderBy('releasedAt', 'desc')
+      .limit(9)
+
+    return view.render('pages/home', { comingSoon, recentlyReleased })
   }
 
   async show({ view, params }: HttpContext) {

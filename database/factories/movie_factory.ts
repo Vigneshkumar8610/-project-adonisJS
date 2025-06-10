@@ -17,4 +17,19 @@ export const MovieFactory = factory
       releasedAt: DateTime.now(),
     }
   })
+  .state('released', (row, { faker }) => {
+    row.statusId = MovieStatuses.RELEASED
+    row.releasedAt = DateTime.fromJSDate(faker.date.past())
+  })
+
+  .state('releasingSoon', (row, { faker }) => {
+    row.statusId = MovieStatuses.RELEASED
+    row.releasedAt = DateTime.fromJSDate(faker.date.soon())
+  })
+
+  .state('postProduction', (row, { faker }) => {
+    row.statusId = MovieStatuses.POST_PRODUCTION
+    row.releasedAt = DateTime.fromJSDate(faker.date.past())
+  })
+
   .build()
