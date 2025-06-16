@@ -1,8 +1,10 @@
 import MovieStatuses from '#enums/movie_statuses'
-import { BaseModel, beforeCreate, column } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, belongsTo, column, scope } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
-import { scope } from '@adonisjs/lucid/orm'
 import string from '@adonisjs/core/helpers/string'
+import MovieStatus from './movie_status.js'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import Cineast from './cineast.js'
 
 export default class Movie extends BaseModel {
   @column({ isPrimary: true })
@@ -38,6 +40,21 @@ export default class Movie extends BaseModel {
   @column.dateTime()
   declare releasedAt: DateTime | null
 
+  @belongsTo(() => MovieStatus, {
+    foreignKey: 'statusId',
+  })
+  declare status: BelongsTo<typeof MovieStatus>
+
+  @belongsTo(() => Cineast, {
+    foreignKey: 'directorId',
+  })
+  declare director: BelongsTo<typeof Cineast>
+
+  @belongsTo(() => Cineast, {
+    foreignKey: 'writerId',
+  })
+  declare writer: BelongsTo<typeof Cineast>
+
   static released = scope((query) => {
     query.where((group) =>
       group
@@ -65,16 +82,32 @@ export default class Movie extends BaseModel {
       lower: true,
       strict: true,
     })
-    const rowws = await Movie.query()
+    const rows = await Movie.query()
       .select('slug')
       .whereRaw('lower(??) = ?', ['slug', slug])
       .orWhereRaw('lower(??) like ?', ['slug', `slug-%`])
 
-      const incrementors = rowws.reduce((result,row) =>{
-       const tokens = row.slug.toLowerCase().split(`${slug}-`)
-    
-       if (tokens.length < 2 ){
+    if (!rows.length) {
+      movie.slug = slug
+      return
+    }
 
-      }, [])
+    const incrementors = rows.reduce<number[]>((result, row) => {
+      const tokens = row.slug.toLowerCase().split(`${slug}-`)
+
+      if (tokens.length < 2) {
+        return result
+      }
+
+      const increment = Number(tokens.at(1))
+
+      if (!Number.isNaN(increment)) {
+        result.push(increment)
+      }
+
+      return result
+    }, [])
+    const increment = incrementors.length ? Math.max(...incrementors) + 1 : 1
+    movie.slug = `${slug}-${increment}`
   }
 }
