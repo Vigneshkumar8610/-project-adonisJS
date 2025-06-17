@@ -26,6 +26,6 @@ export default class GuestMiddleware {
       }
     }
 
-    return next()
+    await next()
   }
 }
