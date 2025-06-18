@@ -1,0 +1,28 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /opt/sample_project
+
+hooks:
+  ApplicationStop:
+    - location: scripts/env-var.sh
+      runas: root
+      timeout: 300
+    - location: scripts/kill_container.sh
+      runas: root
+      timeout: 300
+  AfterInstall:
+    - location: scripts/ecr_login.sh
+      runas: root
+      timeout: 300
+    - location: scripts/pull_image.sh
+      runas: root
+      timeout: 300
+  ApplicationStart:
+    - location: scripts/start_container.sh
+      runas: root
+      timeout: 300
+    - location: scripts/remove_images.sh
+      runas: root
+      timeout: 300

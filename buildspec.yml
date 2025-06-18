@@ -1,0 +1,66 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      #Below Enter all variables according project
+      - REPOURI=442496966439.dkr.ecr.ap-south-1.amazonaws.com #ECR Repo URI
+      - echo "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 442496966439.dkr.ecr.ap-south-1.amazonaws.com"
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $REPOURI # Replace 'your-region' with your AWS region.
+      - IMAGE_NAME=sample_project #Image Name will be used as image name
+      - DOCKER_TAG=$CODEBUILD_BUILD_NUMBER # Use the build number as the Docker image tag
+      #Create .env files and use below variables. will be executed at appspec.yml
+      - echo "SERVICE_NAME=sample_project" >> .env #docker compose service name
+      - echo "IMAGE=$REPOURI/$IMAGE_NAME:$DOCKER_TAG" >> .env #Image name as to be pull from ECR Repo
+      - echo "CONTAINER_NAME=sample_project" >> .env #Container name in docker compose
+      - echo "HOST_PORT=3002" >> .env #Host port in docker compose
+      - echo "CONTAINER_PORT=3333" >> .env #Container port in Docker container
+      - echo "ECRLOGIN=$REPOURI" >> .env #ECR login to pull image in server
+      - echo "SERVERDIR=/opt/sample_project" >> .env
+      - echo "TZ=UTC" >> .env
+      - echo "PORT=3333" >> .env
+      - echo "HOST=0.0.0.0" >> .env
+      - echo "LOG_LEVEL=info" >> .env
+      - echo "APP_KEY=${APP_KEY}" >> .env
+      - echo "NODE_ENV=production" >> .env
+      - echo "CACHE_VIEWS=false" >> .env
+      - echo "SESSION_DRIVER=cookie" >> .env
+      - echo "DB_CONNECTION=mysql" >> .env
+      - echo "DB_HOST=" >> .env
+      - echo "DB_PORT=4315" >> .env
+      - echo "DB_USER=${DB_USER}" >> .env
+      - echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
+      - echo "DB_DATABASE=${DB_DATABASE}" >> .env #Server Path where all files will be stored and docker compose will be executed from
+      - echo "SMTP_HOST=${SMTP_HOST}" >> .env
+      - echo "SMTP_PORT=465" >> .env
+      - echo "SMTP_USERNAME=${SMTP_USERNAME}" >> .env
+      - echo "SMTP_PASSWORD=${SMTP_PASSWORD}" >> .env
+      - echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> .env
+      - echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> .env
+      - echo "AWS_REGION=${AWS_REGION}" >> .env
+      - echo "AWS_BUCKET_NAME=${AWS_BUCKET_NAME}" >> .env
+      - docker --version
+
+
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $IMAGE_NAME:$DOCKER_TAG .
+      - echo Build completed on `date`
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Tag Docker Image
+      - docker tag $IMAGE_NAME:$DOCKER_TAG $REPOURI/$IMAGE_NAME:$DOCKER_TAG
+      - docker images
+      - echo Pushing the Docker image to Amazon ECR...
+      - docker push $REPOURI/$IMAGE_NAME:$DOCKER_TAG # Replace placeholders with your information.
+      - echo Image pushed to Amazon ECR
+      - cat .env
+
+artifacts:
+  files: '**/*' # Optionally, include additional files here.

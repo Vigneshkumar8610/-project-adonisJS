@@ -1,0 +1,12 @@
+version: '3.8' # Use the Docker Compose version suitable for your environment
+
+services:
+  # Web Application Service
+  finmet_gold_loan_platform:
+    image: $IMAGE # Replace with the name of your web application Docker image and its tag
+    container_name: $CONTAINER_NAME
+    restart: always
+    ports:
+      - '$HOST_PORT:$CONTAINER_PORT' # Map host port  to container port
+
+

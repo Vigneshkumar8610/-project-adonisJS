@@ -20,7 +20,6 @@ async function isUnique(value: unknown, options: Options, field: FieldContext) {
     .first()
 
   if (result) {
-    // Report that the value is NOT unique
     field.report('This {{ field }} is already taken', 'isUnique', field)
   }
 }
