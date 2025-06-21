@@ -4,7 +4,6 @@ COPY . /app
 RUN apt update -y
 RUn apt install chromium -y
 RUN npm install
-RUN npm install xlsx
 RUN npm install puppeteer
 RUN npm install node-cron
 RUN npm run build

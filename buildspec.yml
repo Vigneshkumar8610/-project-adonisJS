@@ -6,8 +6,8 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws --version
       #Below Enter all variables according project
-      - REPOURI=442496966439.dkr.ecr.ap-south-1.amazonaws.com #ECR Repo URI
-      - echo "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 442496966439.dkr.ecr.ap-south-1.amazonaws.com"
+      - REPOURI=476768693730.dkr.ecr.ap-south-1.amazonaws.com #ECR Repo URI
+      - echo "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 476768693730.dkr.ecr.ap-south-1.amazonaws.com"
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $REPOURI # Replace 'your-region' with your AWS region.
       - IMAGE_NAME=sample_project #Image Name will be used as image name
       - DOCKER_TAG=$CODEBUILD_BUILD_NUMBER # Use the build number as the Docker image tag
@@ -15,7 +15,7 @@ phases:
       - echo "SERVICE_NAME=sample_project" >> .env #docker compose service name
       - echo "IMAGE=$REPOURI/$IMAGE_NAME:$DOCKER_TAG" >> .env #Image name as to be pull from ECR Repo
       - echo "CONTAINER_NAME=sample_project" >> .env #Container name in docker compose
-      - echo "HOST_PORT=3002" >> .env #Host port in docker compose
+      - echo "HOST_PORT=3001" >> .env #Host port in docker compose
       - echo "CONTAINER_PORT=3333" >> .env #Container port in Docker container
       - echo "ECRLOGIN=$REPOURI" >> .env #ECR login to pull image in server
       - echo "SERVERDIR=/opt/sample_project" >> .env
@@ -29,18 +29,10 @@ phases:
       - echo "SESSION_DRIVER=cookie" >> .env
       - echo "DB_CONNECTION=mysql" >> .env
       - echo "DB_HOST=" >> .env
-      - echo "DB_PORT=4315" >> .env
-      - echo "DB_USER=${DB_USER}" >> .env
-      - echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
-      - echo "DB_DATABASE=${DB_DATABASE}" >> .env #Server Path where all files will be stored and docker compose will be executed from
-      - echo "SMTP_HOST=${SMTP_HOST}" >> .env
-      - echo "SMTP_PORT=465" >> .env
-      - echo "SMTP_USERNAME=${SMTP_USERNAME}" >> .env
-      - echo "SMTP_PASSWORD=${SMTP_PASSWORD}" >> .env
-      - echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> .env
-      - echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> .env
-      - echo "AWS_REGION=${AWS_REGION}" >> .env
-      - echo "AWS_BUCKET_NAME=${AWS_BUCKET_NAME}" >> .env
+      - echo "DB_PORT=" >> .env
+      - echo "DB_USER=" >> .env
+      - echo "DB_PASSWORD=" >> .env
+      - echo "DB_DATABASE=" >> .env
       - docker --version
 
 
