@@ -8,6 +8,7 @@
 */
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+const ProfilesController = () => import('#controllers/profiles_controller')
 const WatchlistsController = () => import('#controllers/watchlists_controller')
 const LogoutController = () => import('#controllers/auth/logout_controller')
 
@@ -19,7 +20,7 @@ const LoginController = () => import('#controllers/auth/login_controller')
 
 const MoviesController = () => import('#controllers/movies_controller')
 
-router.get('/', [MoviesController, 'index']).as('home')
+router.get('/', [MoviesController, 'index']).as('movies.index')
 
 router
 
@@ -27,14 +28,25 @@ router
   .as('movies.show')
   .where('slug', router.matchers.slug())
 
-router.get('/watchlist', [WatchlistsController, 'index']).as('watchlists.index')
-router.post('/watchlists/:movieId/toggle', [WatchlistsController, 'toggle']).as('watchlists.toggle')
+router
+  .group(() => {
+    router.get('/watchlist', [WatchlistsController, 'index']).as('index')
+    router.post('/watchlists/:movieId/toggle', [WatchlistsController, 'toggle']).as('toggle')
+    router
+      .post('/watchlists/:movieId/toggle-watched', [WatchlistsController, 'toggleWatched'])
+      .as('toggle.watched')
+  })
+  .as('watchlists')
+  .use(middleware.auth())
 
 router.get('/directors', [DirectorsController, 'index']).as('directors.index')
 router.get('/directors/:id', [DirectorsController, 'show']).as('directors.show')
 
 router.get('/writers', [WritersController, 'index']).as('writers.index')
 router.get('/writers/:id', [WritersController, 'show']).as('writers.show')
+router.get('/profile/edit', [ProfilesController, 'edit']).as('profiles.edit').use(middleware.auth())
+
+
 
 router
   .group(() => {
