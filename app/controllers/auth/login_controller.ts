@@ -16,6 +16,6 @@ export default class LoginController {
     await auth.use('web').login(user, isRememberMe)
     // 4. Return our user back to the home page
 
-    return response.redirect().toRoute('home')
+    return response.redirect().toRoute('movies.index')
   }
 }
