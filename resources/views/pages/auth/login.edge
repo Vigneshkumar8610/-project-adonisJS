@@ -34,7 +34,15 @@
           Login
         @end
       </form>
-         {{ inspect(flashMessages.all()) }}
+         
+
+         @if(flashMessages.has('errors'))
+  <ul class="text-red-500 text-sm mt-2">
+    @each(error in flashMessages.get('errors'))
+      <li>{{ error.message }}</li>
+    @endeach
+  </ul>
+@endif
     @end
   </div>
 @end

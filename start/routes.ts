@@ -23,7 +23,6 @@ const LoginController = () => import('#controllers/auth/login_controller')
 
 const MoviesController = () => import('#controllers/movies_controller')
 
-
 router.get('/storage/*', [StorageController, 'show']).as('storage.show')
 router.get('/', [MoviesController, 'index']).as('movies.index')
 
