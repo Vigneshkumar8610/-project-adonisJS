@@ -12,8 +12,16 @@
     </span>
   @endif
 
-  <input type="{{ type || 'text' }}" name="{{ name || '' }}" value="{{ value || '' }}" />
-  
+  @if (type === 'select')
+    <select name="{{ name || '' }}">
+      {{{ await $slots.main() }}}
+    </select>
+  @elseif (type === 'textarea')
+    <textarea name="{{ name || '' }}">{{ value || '' }}</textarea>
+  @else
+    <input type="{{ type || 'text' }}" name="{{ name || '' }}" value="{{ value || '' }}" />
+  @endif
+
   @if (name)
     @inputError(name)
       <p class="text-xs text-red-500">

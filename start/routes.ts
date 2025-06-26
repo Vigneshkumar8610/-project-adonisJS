@@ -8,6 +8,9 @@
 */
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+const AdminDashboardController = () => import('#controllers/admin/dashboard_controller')
+const AdminMoviesController = () => import('#controllers/admin/movies_controller')
+const StorageController = () => import('#controllers/storage_controller')
 const ProfilesController = () => import('#controllers/profiles_controller')
 const WatchlistsController = () => import('#controllers/watchlists_controller')
 const LogoutController = () => import('#controllers/auth/logout_controller')
@@ -20,6 +23,8 @@ const LoginController = () => import('#controllers/auth/login_controller')
 
 const MoviesController = () => import('#controllers/movies_controller')
 
+
+router.get('/storage/*', [StorageController, 'show']).as('storage.show')
 router.get('/', [MoviesController, 'index']).as('movies.index')
 
 router
@@ -45,8 +50,7 @@ router.get('/directors/:id', [DirectorsController, 'show']).as('directors.show')
 router.get('/writers', [WritersController, 'index']).as('writers.index')
 router.get('/writers/:id', [WritersController, 'show']).as('writers.show')
 router.get('/profile/edit', [ProfilesController, 'edit']).as('profiles.edit').use(middleware.auth())
-
-
+router.put('/profiles', [ProfilesController, 'update']).as('profiles.update').use(middleware.auth())
 
 router
   .group(() => {
@@ -70,12 +74,8 @@ router
 
 router
   .group(() => {
-    router
-      .get('/', async (ctx) => {
-        return `You are here, ${ctx.auth.user?.fullName} as ${ctx.auth.user?.roleId} role!`
-      })
-      .as('index')
+    router.get('/', [AdminDashboardController, 'handle']).as('dashboard')
+    router.get('/movies', [AdminMoviesController, 'index']).as('movies.index')
   })
   .prefix('/admin')
   .as('admin')
-  .use(middleware.admin())

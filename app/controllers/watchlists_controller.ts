@@ -1,7 +1,7 @@
 import MovieStatus from '#models/movie_status'
 import Watchlist from '#models/watchlist'
 import MovieService from '#services/movie_service'
-import { watchlistFilterValidator } from '#validators/movie'
+import { watchlistFilterValidator } from '#validators/movie_filter'
 import type { HttpContext } from '@adonisjs/core/http'
 import router from '@adonisjs/core/services/router'
 import { DateTime } from 'luxon'
@@ -23,18 +23,11 @@ export default class WatchlistsController {
     movies.baseUrl(router.makeUrl('watchlists.index'))
     movies.queryString(filters)
 
-    const rangeMin = movies.currentPage - 3
-    const rangeMax = movies.currentPage + 3
-    let pagination = movies.getUrlsForRange(1, movies.lastPage).filter((item) => {
-      return item.page >= rangeMin && item.page <= rangeMax
-    })
-
     return view.render('pages/watchlist', {
       movies,
       movieStatuses,
       movieSortOptions,
       filters,
-      pagination,
     })
   }
 

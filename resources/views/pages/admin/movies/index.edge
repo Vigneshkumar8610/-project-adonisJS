@@ -1,0 +1,46 @@
+@layout.admin()
+  <h1>Movies</h1>
+
+  <div class="relative overflow-x-auto text-xs">
+    <table class="w-full text-sm text-left rtl:text-right text-slate-500">
+      <thead class="text-xs text-slate-700 uppercase bg-slate-50">
+        <tr>
+          <th scope="col" class="px-2 py-1.5">Title</th>
+          <th scope="col" class="px-2 py-1.5">Status</th>
+          <th scope="col" class="px-2 py-1.5">Writer/Director</th>
+          <th scope="col" class="px-2 py-1.5">Count</th>
+          <th scope="col" class="px-2 py-1.5"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @each(movie in movies)
+          <tr class="bg-white border-b">
+            <td class="px-2 py-4">{{ movie.title }}</td>
+            <td class="px-2 py-4">{{ movie.status.name }}</td>
+            <td class="px-2 py-4">
+              <div>Writer: {{ movie.writer.fullName }}</div>
+              <div>Director: {{ movie.director.fullName }}</div>
+            </td>
+            <td class="px-2 py-4">
+              <div>Cast Members: {{ movie.$extras.castMembers_count }}</div>
+              <div>Crew Members: {{ movie.$extras.crewMembers_count }}</div>
+            </td>
+            <td class="px-2 py-4">
+                <a href="{{ route('admin.movies.edit', { id: movie.id }) }}">Edit</a>
+                <form 
+                method="POST" 
+                action="{{ route('admin.movies.destroy', { id: movie.id }, { qs: { _method: 'DELETE' }}) }}">
+                {{ csrfField() }}
+                <button type="submit" class="text-red-500">
+                  Delete
+                </button>
+              </form>
+              </td>
+          </tr>
+        @endeach
+      </tbody>
+    </table>
+  </div>
+
+  @!pagination({ paginator: movies })
+@end

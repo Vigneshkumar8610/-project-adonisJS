@@ -15,7 +15,7 @@
 "#listeners/*": ["./app/listeners/*.ts"],
 "#events/*": ["./app/events/*.ts"],
 "#middleware/*": ["./app/middleware/*.ts"],
-"#validators/*": ["./app/validators/*.ts"],
+"#validators/*": ["./app/validators/*"],
 "#providers/*": ["./providers/*.ts"],
 "#policies/*": ["./app/policies/*.ts"],
 "#abilities/*": ["./app/abilities/*.ts"],

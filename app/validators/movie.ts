@@ -1,29 +1,44 @@
-import MovieService from '#services/movie_service'
 import vine from '@vinejs/vine'
+import { DateTime } from 'luxon'
 
-const sharedMovieFilterSchema = vine.object({
-  search: vine.string().optional(),
-  status: vine
-    .number()
-    .exists(async (db, value) => {
-      if (!value) return true
-      const exists = await db.from('movie_statuses').select('id').where('id', value).first()
-      return !!exists
-    })
-    .optional(),
-  sort: vine
-    .string()
-    .exists(async (_db, value) => {
-      return MovieService.sortOptions.some((option) => option.id === value)
-    })
-    .optional(),
-})
-
-export const movieFilterValidator = vine.compile(sharedMovieFilterSchema)
-
-export const watchlistFilterValidator = vine.compile(
+export const movieValidator = vine.compile(
   vine.object({
-    ...sharedMovieFilterSchema.getProperties(),
-    watched: vine.enum(['all', 'watched', 'unwatched']).optional(),
+    poster: vine.file({ extnames: ['png', 'jpg', 'jpeg', 'gif'], size: '5mb' }).optional(),
+    posterUrl: vine.string().optional(),
+    title: vine.string().maxLength(100),
+
+    summary: vine
+      .string()
+      .maxLength(255)
+      .nullable()
+      .transform((value) => (value ? value : '')),
+    abstract: vine.string(),
+    writerId: vine.number().exists({ table: 'cineasts', column: 'id' }),
+    directorId: vine.number().exists({ table: 'cineasts', column: 'id' }),
+    statusId: vine.number().exists({ table: 'movie_statuses', column: 'id' }),
+    releasedAt: vine
+      .date()
+
+      .nullable()
+      .transform((value) => {
+        if (!value) return
+        return DateTime.fromJSDate(value)
+      }),
+    crew: vine
+      .array(
+        vine.object({
+          id: vine.number().exists({ table: 'cineasts', column: 'id' }),
+          title: vine.string(),
+        })
+      )
+      .optional(),
+    cast: vine
+      .array(
+        vine.object({
+          id: vine.number().exists({ table: 'cineasts', column: 'id' }),
+          character_name: vine.string(),
+        })
+      )
+      .optional(),
   })
 )
