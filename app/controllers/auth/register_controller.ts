@@ -19,6 +19,6 @@ export default class RegisterController {
     await auth.use('web').login(user)
 
     // 5. Return the user back to home
-    return response.redirect().toRoute('home')
+    return response.redirect().toRoute('movies.index')
   }
 }
