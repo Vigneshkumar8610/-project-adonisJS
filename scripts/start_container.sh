@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source /opt/sample_project/.env
+source /opt/movie_project/.env
 cd $SERVERDIR
 
 docker compose up -d

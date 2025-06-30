@@ -2,6 +2,6 @@
 
 set -e
 
-cd /opt/sample_project
+cd /opt/movie_project
 
 source .env
