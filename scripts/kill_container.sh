@@ -1,4 +1,4 @@
-source /opt/movie_project/.env
+source /opt/test_movie/.env
 set -e
 
 cd $SERVERDIR

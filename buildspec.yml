@@ -9,16 +9,16 @@ phases:
       - REPOURI=476768693730.dkr.ecr.ap-south-1.amazonaws.com #ECR Repo URI
       - echo "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 476768693730.dkr.ecr.ap-south-1.amazonaws.com"
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $REPOURI # Replace 'your-region' with your AWS region.
-      - IMAGE_NAME=movie_project #Image Name will be used as image name
+      - IMAGE_NAME=test_movie #Image Name will be used as image name
       - DOCKER_TAG=$CODEBUILD_BUILD_NUMBER # Use the build number as the Docker image tag
       #Create .env files and use below variables. will be executed at appspec.yml
-      - echo "SERVICE_NAME=movie_project" >> .env #docker compose service name
+      - echo "SERVICE_NAME=test_movie" >> .env #docker compose service name
       - echo "IMAGE=$REPOURI/$IMAGE_NAME:$DOCKER_TAG" >> .env #Image name as to be pull from ECR Repo
-      - echo "CONTAINER_NAME=movie_project" >> .env #Container name in docker compose
+      - echo "CONTAINER_NAME=test_movie" >> .env #Container name in docker compose
       - echo "HOST_PORT=3001" >> .env #Host port in docker compose
       - echo "CONTAINER_PORT=3333" >> .env #Container port in Docker container
       - echo "ECRLOGIN=$REPOURI" >> .env #ECR login to pull image in server
-      - echo "SERVERDIR=/opt/movie_project" >> .env
+      - echo "SERVERDIR=/opt/test_movie" >> .env
       - echo "TZ=UTC" >> .env
       - echo "PORT=3333" >> .env
       - echo "HOST=0.0.0.0" >> .env

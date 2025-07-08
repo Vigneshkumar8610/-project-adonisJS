@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /opt/movie_project
+    destination: /opt/test_movie
 
 hooks:
   ApplicationStop:
